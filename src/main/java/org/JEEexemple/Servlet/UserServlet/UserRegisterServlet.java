@@ -1,6 +1,5 @@
-package org.JEEexemple.Servlet;
+package org.JEEexemple.Servlet.UserServlet;
 
-import java.util.List; // Use the correct List import
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,12 +11,15 @@ import org.JEEexemple.Models.User;
 
 import java.io.IOException;
 
-public class UserServlet {
 @WebServlet("/addUser")
-public class UserRegisterServlet extends HttpServlet {
+  public class UserRegisterServlet extends HttpServlet {
     private final UserDAOImpl userDAO = new UserDAOImpl();
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("addUser.jsp");
+        dispatcher.forward(request, response);
+    }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -35,20 +37,7 @@ public class UserRegisterServlet extends HttpServlet {
         userDAO.createUser(user);
         response.sendRedirect("success.jsp"); // Redirect to a success page
     }
-}
+  }
 
-@WebServlet("/listUsers")
-public class UserListServlet extends HttpServlet {
-    private final UserDAOImpl userDAO = new UserDAOImpl();
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<User> userList = userDAO.findAllUser(); // Make sure this method is implemented
-        request.setAttribute("userList", userList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("userList.jsp"); // A JSP page to display users
-        dispatcher.forward(request, response);
-    }
-}
-}
 
 

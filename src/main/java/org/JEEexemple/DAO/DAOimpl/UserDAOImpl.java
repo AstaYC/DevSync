@@ -1,16 +1,18 @@
 package org.JEEexemple.DAO.DAOimpl;
+
 import org.JEEexemple.Models.User;
 import org.JEEexemple.DAO.Interface.UserInterface;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-import org.JEEexemple.Util.HibernateUtil; // Assuming you have a HibernateUtil class for session management
+import org.JEEexemple.Util.HibernateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDAOImpl implements UserInterface {
+    private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class.getName());
 
     @Override
     public void createUser(User user) {
@@ -19,9 +21,11 @@ public class UserDAOImpl implements UserInterface {
             transaction = session.beginTransaction();
             session.save(user);
             transaction.commit();
+            LOGGER.info("User created successfully");
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error creating user", e);
+            throw new RuntimeException("Failed to create user", e);
         }
     }
 
